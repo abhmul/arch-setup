@@ -47,37 +47,34 @@ alias ga='gitaliases'
 
 # sync-documents
 export DRIVE_PATH=$HOME/gdrive
-export SYNC_DOCUMENTS=$DRIVE_PATH/sync-documents
-export SYNC_DATA=$DRIVE_PATH/sync-data
+export SYNC_DOCUMENTS=sync-documents
+export SYNC_DOCUMENTS_PATH=$DRIVE_PATH/$SYNC_DOCUMENTS
+export SYNC_DATA=sync-data
+export SYNC_DATA_PATH=$DRIVE_PATH/$SYNC_DATA
 export TEXTBOOK_LIBRARY=$SYNC_DATA/library
-init_drive() {
-	mkdir -p $DRIVE_PATH
-	cd $DRIVE_PATH
-}
+export TEXTBOOK_LIBRARY_PATH=$DRIVE_PATH/$TEXTBOOK_LIBRARY
+alias rsync="rclone sync -i --create-empty-src-dirs"
 sync-documents() {
-	init_drive
-	if [[ ! -d $SYNC_DOCUMENTS ]]
+	if [[ ! -d $SYNC_DOCUMENTS_PATH ]]
 	then
-		rclone sync -i drive:sync-documents sync-documents/
+		rsync drive:$SYNC_DOCUMENTS $SYNC_DOCUMENTS_PATH
 	fi
-	cd $SYNC_DOCUMENTS
+	cd $SYNC_DOCUMENTS_PATH
 }
 sync-data() {
-	init_drive
-        if [[ ! -d $SYNC_DATA ]]
+        if [[ ! -d $SYNC_DATA_PATH ]]
         then
-                mkdir sync-data
+                mkdir -p $SYNC_DATA_PATH
 		echo -e "To pull different sync-data modules, run \`dpull sync-data/\[MODULE\]\'"
         fi
-        cd $SYNC_DATA
+        cd $SYNC_DATA_PATH
 }
 library() {
-	init_drive
-        if [[ ! -d $TEXTBOOK_LIBRARY ]]
+        if [[ ! -d $TEXTBOOK_LIBRARY_PATH ]]
         then
-                rclone sync -i drive:sync-data/library sync-data/library/
+                rsync drive:$TEXTBOOK_LIBRARY $TEXTBOOK_LIBRARY_PATH
         fi
-        cd $TEXTBOOK_LIBRARY
+        cd $TEXTBOOK_LIBRARY_PATH
 }
 
 trim_trailing_helper() { 
@@ -108,7 +105,6 @@ drive_command_helper() {
 	echo -e $tail_path
 	return 0
 }
-alias rsync="rclone sync -i --create-empty-src-dirs"
 dpull() { 
 	PATH_PARSE=$(drive_command_helper $@) RCODE=$?
 	if [[ $RCODE -ne 0 ]]; then

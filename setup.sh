@@ -97,15 +97,10 @@ echo -e "Test installation with dktest when the script is complete."
 # Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 
 
-# Setup workstation TODO install drive
-# cd $HOME && {
-# 	mkdir -p dev
-# 	mkdir -p gdrive && \
-# 	cd gdrive && \
-# 	drive init && \
-# 	drive pull sync-documents && \
-# 	drive pull sync-data/library
-# }
+# Setup workstation 
+sudo pacman -S --needed rclone
+echo -e "\nSetup the rclone config, then run \`sd\` and \`library\` to get Google Drive files"
+cd $HOME && mkdir -p dev
 cd $HOME && mkdir -p .local/bin
 
 # Install miniconda
