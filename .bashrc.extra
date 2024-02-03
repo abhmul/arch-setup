@@ -1,7 +1,3 @@
-# Append to path
-export SNAPPATH=/snap
-export LOCALPATH=$HOME/.local
-export PATH=$LOCALPATH/bin/:$SNAPPATH/bin:$PATH
-export PATH=$PATH:$HOME/.emacs.d/bin
-export GOPATH=$SNAPPATH/go
-export PATH=$GOPATH:$GOPATH/bin:$PATH
+#!/usr/bin/sh
+
+source $HOME/.bash_aliases

@@ -1,0 +1,30 @@
+[user]
+	email = abhmul@gmail.com
+	name = jetm
+[alias]
+	s = status
+	a = !git add -A
+	u = !git add -u
+	c = !git commit -m
+	ac = !git a && git c
+	uc = !git u && git c
+	p = !git push -u origin HEAD
+	f = !git fetch -v
+	fr = !git stash && git pull -r && git stash pop
+	frp = !git fr && git p -f
+	acp = "! f() { git ac \"$1\" && git p; } ; f"
+	ucp = "! f() { git uc \"$1\" && git p; } ; f"
+	up = "! f() { git ac \"$1\" && git frp; } ; f"
+	smartlog = log --graph --pretty=format:'commit: %C(bold red)%h%Creset %C(red)<%H>%Creset %C(bold magenta)%d %Creset%ndate: %C(bold yellow)%cd %Creset%C(yellow)%cr%Creset%nauthor: %C(bold blue)%an%Creset %C(blue)<%ae>%Creset%n%C(cyan)%s%n%Creset'
+	sl = !git smartlog
+[pull]
+	ff = only
+
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[core]
+        editor = code --wait

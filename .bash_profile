@@ -1,12 +1,16 @@
-if [ -z "$SSH_AUTH_SOCK" ]
-then
-   # Check for a currently running instance of the agent
-   RUNNING_AGENT="`ps -ax | grep 'ssh-agent -s' | grep -v grep | wc -l | tr -d '[:space:]'`"
-   if [ "$RUNNING_AGENT" = "0" ]
-   then
-        # Launch a new instance of the agent
-        ssh-agent -s &> .ssh/ssh-agent
-   fi
-   eval `cat .ssh/ssh-agent`
-   ssh-add .ssh/id_rsa
+# Append to path
+export LOCALPATH=$HOME/.local
+export PATH=$LOCALPATH/bin:$PATH
+
+export EDITOR=nvim
+
+if [ -f $HOME/.bashrc ]; then
+        source $HOME/.bashrc
 fi
+
+# Start X11
+if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
+	exec startx
+fi
+
+

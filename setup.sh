@@ -8,91 +8,103 @@ if [[ $SETUP_PATH != *arch-setup ]]; then
 fi
 
 # Setup and upgrade
-sudo pacman -SyU
+sudo pacman -Syu
+sudo pacman -S --needed git lsb-release
 # TODO Add 
 # - yay
-# - i3
+# - i3, i3blocks
 # - network-manager
 # - blueman
-#
-# TODO - should I replace pacman calls with yay?
 
 # Install python setup-tools
-sudo pacman -S python-setuptools
+sudo pacman -S --needed python-setuptools
 
 # Install screen layout manager
-sudo pacman -S arandr
+sudo pacman -S --needed arandr
 
 # Install applets
-sudo pacman -S indicator-sound-switcher
+yay -Sa --needed indicator-sound-switcher
 
 # Install tools
-sudo pacman -S --needed nvim
-sudo pacman -S --needed ranger
-sudo pacman -S --needed scrot
-sudo pacman -S --needed xclip
+sudo pacman -S --needed neovim ranger scrot xclip firefox
 
 # Setup software
-# TODO - continue updating from here
-snap install vscode --classic
-snap install emacs --classic
-snap install obsidian
-snap install zoom-client
+sudo pacman -S --needed code obsidian
+yay -Sa --needed zoom
+yay -Sa --needed howdoi
 
 # Setup background
-sudo apt -y install feh
+sudo pacman -S --needed feh
 
 
 # Set up symbolic link
-echo "Setting up symbolic links"
+echo -e "Setting up symbolic links"
 
-mkdir $HOME/.config
-cd $HOME/.config && {
-	rm -rf i3
-	ln -s $SETUP_PATH/.config/i3 i3
-	rm -rf i3status
-	ln -s $SETUP_PATH/.config/i3status i3status
-}
 cd $HOME && {
-	rm -rf .scripts
+	rm -fv .gitconfig
+	ln -s $SETUP_PATH/.gitconfig .gitconfig
+}
+mkdir -p $HOME/.config
+cd $HOME/.config && {
+	rm -rfv i3
+	ln -s $SETUP_PATH/.config/i3 i3
+}
+# TODO - i3blocks setup
+cd $HOME && {
+	rm -rfv .scripts
 	ln -s $SETUP_PATH/.scripts .scripts
 }
 cd $HOME && {
-	rm -rf indicators
+	rm -rfv indicators
 	ln -s $SETUP_PATH/indicators indicators
 }
-mkdir $HOME/Pictures
+mkdir -p $HOME/Pictures
 cd $HOME/Pictures && {
-	rm normandy-destruction.jpg
-	ln -s $SETUP_PATH/Pictures/normandy-destruction.jpg normandy-destruction.jpg
+	rm -fv normandy-sr2.jpg
+	ln -s $SETUP_PATH/Pictures/normandy-sr2.jpg normandy-sr2.jpg
 }
 cd $HOME && {
-	rm .bashrc.extra
+	rm -fv .bashrc.extra
 	ln -s $SETUP_PATH/.bashrc.extra .bashrc.extra
-	echo "\n. $HOME/.bashrc.extra" >> .bashrc 
-	rm .bash_aliases
+	
+	if grep -R -q "source \$HOME/.bashrc.extra" .bashrc
+	then
+		:
+	else
+		echo -e "\nsource \$HOME/.bashrc.extra" >> .bashrc
+	fi
+
+	rm -fv .bash_aliases
 	ln -s $SETUP_PATH/.bash_aliases .bash_aliases
-	rm .bash_profile
+	rm -fv .bash_profile
 	ln -s $SETUP_PATH/.bash_profile .bash_profile
-	echo "\n\nCurrent state of bash settings"
-	l -alh | grep .bash
-	echo "\nUsing new bashrc"
+	echo -e "\nCurrent state of bash settings"
+	ls -alh | grep .bash
+	echo -e "\nUsing new bashrc"
 	source ~/.bashrc
 }
 
 
 # Install Docker
-echo "\n\nInstall docker at https://docs.docker.com/engine/install/ubuntu/#installation-methods"
-echo "Test installation with dktest"
+echo -e "\nInstalling docker"
+sudo pacman -S --needed docker
+echo -e "Test installation with dktest when the script is complete."
 
-# Setup workstation
-cd $HOME && {
-	mkdir dev
-	mkdir sync-documents
-}
+# Setup workstation TODO install drive
+# cd $HOME && {
+# 	mkdir -p dev
+# 	mkdir -p gdrive && \
+# 	cd gdrive && \
+# 	drive init && \
+# 	drive pull sync-documents && \
+# 	drive pull sync-data/library
+# }
+cd $HOME && mkdir -p .local/bin
+
+# Install miniconda
+# TODO wget to /tmp https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+# Run the miniconda installation
 
 # Run alias commands that do some setup
-up
-p
-o
+
 
