@@ -51,19 +51,14 @@ export SYNC_DOCUMENTS=$DRIVE_PATH/sync-documents
 export SYNC_DATA=$DRIVE_PATH/sync-data
 export TEXTBOOK_LIBRARY=$SYNC_DATA/library
 init_drive() {
-	if [[ ! -d $DRIVE_PATH ]]
-	then
-		mkdir -p $DRIVE_PATH && \
-		cd $DRIVE_PATH && \
-		drive init
-	fi
+	mkdir -p $DRIVE_PATH
 	cd $DRIVE_PATH
 }
 sync-documents() {
 	init_drive
 	if [[ ! -d $SYNC_DOCUMENTS ]]
 	then
-		drive pull sync-documents
+		rclone sync -i drive:sync-documents sync-documents/
 	fi
 	cd $SYNC_DOCUMENTS
 }
@@ -72,7 +67,7 @@ sync-data() {
         if [[ ! -d $SYNC_DATA ]]
         then
                 mkdir sync-data
-		echo -e "To pull different sync-data modules, run \`drive pull sync-data/\[MODULE\]\'"
+		echo -e "To pull different sync-data modules, run \`dpull sync-data/\[MODULE\]\'"
         fi
         cd $SYNC_DATA
 }
@@ -80,12 +75,58 @@ library() {
 	init_drive
         if [[ ! -d $TEXTBOOK_LIBRARY ]]
         then
-                drive pull sync-data/library
+                rclone sync -i drive:sync-data/library sync-data/library/
         fi
         cd $TEXTBOOK_LIBRARY
 }
 
-alias sync='drive pull -no-clobber && drive push'
+trim_trailing_helper() { 
+	echo -e $(echo -e "$@" | sed "s:/*$::") 
+}
+
+drive_command_helper() {
+	if [[ $# -eq 0 ]]; then
+		path=$(pwd)
+		tail_path="$(trim_trailing_helper ${path#$DRIVE_PATH/})"
+		head_path="$(trim_trailing_helper ${path%$tail_path})"
+		if [[ $head_path != $DRIVE_PATH ]]; then
+			echo -e "Must run from inside $DRIVE_PATH! Currently at $path."
+			return 1
+		fi
+
+		if [[ $path = $DRIVE_PATH ]]; then
+			echo -e "Must run from a subfolder of $DRIVE_PATH, not from $DRIVE_PATH."
+			return 1
+		fi
+
+	else
+		tail_path=$1
+		head_path=$DRIVE_PATH
+	fi
+
+	echo -e $head_path
+	echo -e $tail_path
+	return 0
+}
+alias rsync="rclone sync -i --create-empty-src-dirs"
+dpull() { 
+	PATH_PARSE=$(drive_command_helper $@) RCODE=$?
+	if [[ $RCODE -ne 0 ]]; then
+		echo $PATH_PARSE
+		return $RCODE
+	fi
+	{ read head_path; read tail_path;} <<<"$PATH_PARSE"
+	rsync drive:$tail_path $head_path/$tail_path
+}
+dpush() { 
+	PATH_PARSE=$(drive_command_helper $@) RCODE=$?
+	if [[ $RCODE -ne 0 ]]; then
+		echo $PATH_PARSE
+		return $RCODE
+	fi
+	{ read head_path; read tail_path;} <<<"$PATH_PARSE"
+	rsync $head_path/$tail_path drive:$tail_path
+}
 alias sd='sync-documents'
 alias sdata='sync-data'
 
