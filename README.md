@@ -7,9 +7,11 @@ Additional wallpapers can be found on my [Google Drive](https://drive.google.com
 ## Checklist
 - [x] ~~Add installation of google drive `setup.sh`~~ Replaced with rclone
 - [x] Setup google drive folder and test
-- [ ] Download/fix webcam drivers
-- [ ] Test getting onto a zoom call
-- [ ] Setup Rofi desktop app manager
+- [x] Download/fix webcam drivers - no fix needed
+- [x] Test getting onto a zoom call
+- [ ] Setup Rofi desktop app manager 
+  - see https://www.youtube.com/watch?v=TutfIwxSE_s
+  - https://github.com/davatorium/rofi
 - [ ] Add to i3blocks
   - [ ] Mute on or off?
   - [ ] Mic on or off?
