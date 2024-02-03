@@ -19,3 +19,4 @@ Additional wallpapers can be found on my [Google Drive](https://drive.google.com
 - [ ] Copy over various commands and files made from the [Install i3 on Arch](https://gist.github.com/fjpalacios/441f2f6d27f25ee238b9bfcb068865db) tutorial.
 - [ ] Add .xinitrc to this repository and symlink it onto computer
 - [ ] Setup Rofi desktop app manager
+- [ ] add no-notifications extension to i3 config and test it out
