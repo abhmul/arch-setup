@@ -89,6 +89,13 @@ cd $HOME && {
 echo -e "\nInstalling docker"
 sudo pacman -S --needed docker
 echo -e "Test installation with dktest when the script is complete."
+# TODO: Why is this error occuring? Do I need to change my dockerfile or add some more installation scripts?
+# DEPRECATED: The legacy builder is deprecated and will be removed in a future release.
+#             Install the buildx component to build images with BuildKit:
+#             https://docs.docker.com/go/buildx/
+# 
+# Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+
 
 # Setup workstation TODO install drive
 # cd $HOME && {

@@ -71,7 +71,8 @@ sync-data() {
 	init_drive
         if [[ ! -d $SYNC_DATA ]]
         then
-                drive pull sync-data
+                mkdir sync-data
+		echo -e "To pull different sync-data modules, run \`drive pull sync-data/\[MODULE\]\'"
         fi
         cd $SYNC_DATA
 }
