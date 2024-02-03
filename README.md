@@ -20,3 +20,9 @@ Additional wallpapers can be found on my [Google Drive](https://drive.google.com
 - [ ] Add .xinitrc to this repository and symlink it onto computer
 - [ ] Setup Rofi desktop app manager
 - [ ] add no-notifications extension to i3 config and test it out
+- [ ] add auto-start of some applications on startup
+  - [ ] browser - ws 2
+  - [ ] terminals - ws 1
+  - [ ] obsidian - ws 3
+- [ ] Investigate use of Optimus to save battery
+- [ ] Test using the GPU through docker
