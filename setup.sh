@@ -26,7 +26,7 @@ sudo pacman -S --needed arandr
 yay -Sa --needed indicator-sound-switcher
 
 # Install tools
-sudo pacman -S --needed neovim ranger scrot xclip firefox
+sudo pacman -S --needed neovim ranger scrot xclip firefox sysstat htop cameractrls otf-font-awesome
 
 # Setup software
 sudo pacman -S --needed code obsidian

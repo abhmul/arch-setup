@@ -9,15 +9,15 @@ Additional wallpapers can be found on my [Google Drive](https://drive.google.com
 - [x] Setup google drive folder and test
 - [x] Download/fix webcam drivers - no fix needed
 - [x] Test getting onto a zoom call
-- [ ] Setup Rofi desktop app manager 
+- [ ] ~~Setup Rofi desktop app manager~~ just using i3-dmenu-desktop for now 
   - see https://www.youtube.com/watch?v=TutfIwxSE_s
   - https://github.com/davatorium/rofi
-- [ ] Add to i3blocks
-  - [ ] Mute on or off?
-  - [ ] Mic on or off?
-  - [ ] Webcam on or off?
-  - [ ] Filesystem free space
-  - [ ] CPU load with ema
+- [x] Add to i3blocks
+  - [x] Mute on or off?
+  - [x] Mic on or off?
+  - [x] Webcam on or off?
+  - [x] Filesystem free space
+  - [ ] ~~CPU load with ema~~
 - [ ] Add installation of miniconda to `setup.sh`
 
 - [ ] Add installation of below to `setup.sh`
