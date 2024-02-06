@@ -104,8 +104,11 @@ cd $HOME && mkdir -p dev
 cd $HOME && mkdir -p .local/bin
 
 # Install miniconda
-# TODO wget to /tmp https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-# Run the miniconda installation
+mkdir -p $HOME/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+$HOME/miniconda3/bin/conda init bash
 
 # Run alias commands that do some setup
 

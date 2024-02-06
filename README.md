@@ -19,6 +19,8 @@ Additional wallpapers can be found on my [Google Drive](https://drive.google.com
   - [x] Filesystem free space
   - [ ] ~~CPU load with ema~~
 - [ ] Add installation of miniconda to `setup.sh`
+- [ ] Fix brightness control
+- [ ] Change home and root file system space to be SPACE_USED/TOTAL_SPACE
 
 - [ ] Add installation of below to `setup.sh`
   - [ ] yay
