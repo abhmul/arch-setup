@@ -104,11 +104,10 @@ cd $HOME && mkdir -p dev
 cd $HOME && mkdir -p .local/bin
 
 # Install miniconda
-mkdir -p $HOME/miniconda3
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/miniconda3/miniconda.sh
-bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-rm -rf ~/miniconda3/miniconda.sh
-$HOME/miniconda3/bin/conda init bash
+cd $HOME
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3-$(uname)-$(uname -m).sh
+rm Miniforge3-$(uname)-$(uname -m).sh
 
 # Run alias commands that do some setup
 

@@ -18,7 +18,8 @@ Additional wallpapers can be found on my [Google Drive](https://drive.google.com
   - [x] Webcam on or off?
   - [x] Filesystem free space
   - [ ] ~~CPU load with ema~~
-- [ ] Add installation of miniconda to `setup.sh`
+- [x] Add installation of miniconda to `setup.sh`
+- [ ] Figure out bash: cd too many arguments issue
 - [ ] Fix brightness control
 - [ ] Change home and root file system space to be SPACE_USED/TOTAL_SPACE
 
