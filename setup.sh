@@ -29,9 +29,8 @@ yay -Sa --needed indicator-sound-switcher
 sudo pacman -S --needed neovim ranger scrot xclip firefox sysstat htop cameractrls otf-font-awesome
 
 # Setup software
-sudo pacman -S --needed code obsidian
-yay -Sa --needed zoom
-yay -Sa --needed howdoi
+sudo pacman -S --needed obsidian
+yay -Sa --needed zoom visual-studio-code-bin howdoi
 
 # Setup background
 sudo pacman -S --needed feh
