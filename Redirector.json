@@ -1,0 +1,91 @@
+{
+    "createdBy": "Redirector v3.5.3",
+    "createdAt": "2024-02-08T19:41:42.657Z",
+    "redirects": [
+        {
+            "description": "Example redirect, try going to http://example.com/anywordhere",
+            "exampleUrl": "http://example.com/some-word-that-matches-wildcard",
+            "exampleResult": "https://google.com/search?q=some-word-that-matches-wildcard",
+            "error": null,
+            "includePattern": "http://example.com/*",
+            "excludePattern": "",
+            "patternDesc": "Any word after example.com leads to google search for that word.",
+            "redirectUrl": "https://google.com/search?q=$1",
+            "patternType": "W",
+            "processMatches": "noProcessing",
+            "disabled": false,
+            "grouped": false,
+            "appliesTo": [
+                "main_frame"
+            ]
+        },
+        {
+            "description": "Cambridge University Press",
+            "exampleUrl": "https://www.cambridge.org/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/la-theorie-des-noyaux-reproduisants-et-ses-applications-premiere-partie/BE178B3408D0A7926A281ECE8B9F13CE",
+            "exampleResult": "https://www-cambridge-org.proxy.cc.uic.edu/core/journals/mathematical-proceedings-of-the-cambridge-philosophical-society/article/abs/la-theorie-des-noyaux-reproduisants-et-ses-applications-premiere-partie/BE178B3408D0A7926A281ECE8B9F13CE",
+            "error": null,
+            "includePattern": "https://www.cambridge.org/*",
+            "excludePattern": "",
+            "patternDesc": "Any word after example.com leads to google search for that word.",
+            "redirectUrl": "https://www-cambridge-org.proxy.cc.uic.edu/$1",
+            "patternType": "W",
+            "processMatches": "noProcessing",
+            "disabled": false,
+            "grouped": false,
+            "appliesTo": [
+                "main_frame"
+            ]
+        },
+        {
+            "description": "Springer",
+            "exampleUrl": "https://link.springer.com/chapter/10.1007/3-540-44581-1_27",
+            "exampleResult": "https://link-springer-com.proxy.cc.uic.edu/chapter/10.1007/3-540-44581-1_27",
+            "error": null,
+            "includePattern": "https://link.springer.com/*",
+            "excludePattern": "",
+            "patternDesc": "",
+            "redirectUrl": "https://link-springer-com.proxy.cc.uic.edu/$1",
+            "patternType": "W",
+            "processMatches": "noProcessing",
+            "disabled": false,
+            "grouped": false,
+            "appliesTo": [
+                "main_frame"
+            ]
+        },
+        {
+            "description": "JSTOR",
+            "exampleUrl": "https://www.jstor.org/stable/2239347",
+            "exampleResult": "https://www-jstor-org.proxy.cc.uic.edu/stable/2239347",
+            "error": null,
+            "includePattern": "https://www.jstor.org/*",
+            "excludePattern": "",
+            "patternDesc": "",
+            "redirectUrl": "https://www-jstor-org.proxy.cc.uic.edu/$1",
+            "patternType": "W",
+            "processMatches": "noProcessing",
+            "disabled": false,
+            "grouped": false,
+            "appliesTo": [
+                "main_frame"
+            ]
+        },
+        {
+            "description": "IEEE",
+            "exampleUrl": "https://ieeexplore.ieee.org/abstract/document/9929417",
+            "exampleResult": "https://ieeexplore-ieee-org.proxy.cc.uic.edu/abstract/document/9929417",
+            "error": null,
+            "includePattern": "https://ieeexplore.ieee.org/*",
+            "excludePattern": "",
+            "patternDesc": "",
+            "redirectUrl": "https://ieeexplore-ieee-org.proxy.cc.uic.edu/$1",
+            "patternType": "W",
+            "processMatches": "noProcessing",
+            "disabled": false,
+            "grouped": false,
+            "appliesTo": [
+                "main_frame"
+            ]
+        }
+    ]
+}
