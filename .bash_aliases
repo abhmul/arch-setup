@@ -45,6 +45,9 @@ alias gitconfig='$EDITOR ~/.gitconfig'
 alias gitaliases='gitconfig'
 alias ga='gitaliases'
 
+# Util tools
+alias djvu2pdf="~/arch-setup/.scripts/djvu2pdf.sh"
+
 # sync-documents
 export DRIVE_PATH=$HOME/gdrive
 export SYNC_DOCUMENTS=sync-documents
