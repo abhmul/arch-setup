@@ -1,7 +1,7 @@
 alias sudo='sudo '
 
 # package management
-alias up='sudo pacman -Syu && yay -Syu'
+alias up='sudo pacman -Syu && mamba activate arch && yay -Syu && mamba deactivate'
 alias search='sudo pacman --search'
 alias clean='sudo pacman --clean'
 alias remove='sudo pacman -R'
