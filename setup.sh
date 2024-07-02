@@ -108,6 +108,9 @@ wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforg
 bash Miniforge3-$(uname)-$(uname -m).sh
 rm Miniforge3-$(uname)-$(uname -m).sh
 
+# Setup mamba
+echo -e "\nTo finish setting up mamba, run \`mamba env create -f environment.yml\` to create the arch python environment"
+
 # Run alias commands that do some setup
 
 

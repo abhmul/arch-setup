@@ -1,0 +1,13 @@
+name: arch
+channels:
+  - conda-forge
+dependencies:
+  - build
+  - poetry
+  - python-installer
+  - ca-certificates
+  - certifi
+  - openssl
+  - termcolor
+  - tqdm
+prefix: /home/abhmul/miniforge3/envs/arch
