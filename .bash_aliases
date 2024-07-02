@@ -17,7 +17,7 @@ alias bashrc='$EDITOR $HOME/.bashrc'
 alias rc='bashrc'
 alias bash_profile='$EDITOR $HOME/.bash_profile'
 alias prof='bash_profile'
-
+alias clear-data='history -wc && cat /dev/null > ~/.bash_history && ~/arch-setup/.scripts/clear-clipboard.sh'
 # i3 management
 alias config='$EDITOR $HOME/.config/i3/config'
 alias startup='$EDITOR $HOME/.scripts/startup.sh'
