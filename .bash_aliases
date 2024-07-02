@@ -47,6 +47,11 @@ alias ga='gitaliases'
 
 # Util tools
 alias djvu2pdf="~/arch-setup/.scripts/djvu2pdf.sh"
+encrypt-drive() {
+	mamba activate arch
+	python ~/arch-setup/.scripts/encrypt-drive.py "$@"
+	mamba deactivate
+}
 
 # sync-documents
 export DRIVE_PATH=$HOME/gdrive
