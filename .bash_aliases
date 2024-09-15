@@ -120,7 +120,7 @@ dpull() {
 		return $RCODE
 	fi
 	{ read head_path; read tail_path;} <<<"$PATH_PARSE"
-	rsync drive:$tail_path $head_path/$tail_path
+	rsync --exclude-from={'.driveignore'} drive:$tail_path $head_path/$tail_path
 }
 dpush() { 
 	PATH_PARSE=$(drive_command_helper $@) RCODE=$?
@@ -129,7 +129,7 @@ dpush() {
 		return $RCODE
 	fi
 	{ read head_path; read tail_path;} <<<"$PATH_PARSE"
-	rsync $head_path/$tail_path drive:$tail_path
+	rsync --exclude-from={'.driveignore'} $head_path/$tail_path drive:$tail_path
 }
 alias sd='sync-documents'
 alias sdata='sync-data'
