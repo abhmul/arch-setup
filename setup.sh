@@ -83,6 +83,8 @@ cd $HOME && {
 	source ~/.bashrc
 }
 
+# Setup rc.local
+/bin/sh $SETUP_PATH/sync_rc_local.sh
 
 # Install Docker
 echo -e "\nInstalling docker"
