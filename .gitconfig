@@ -28,3 +28,7 @@
 	required = true
 [core]
         editor = code --wait
+[init]
+	defaultBranch = main
+[credential]
+	helper = store --file ~/.git-credentials

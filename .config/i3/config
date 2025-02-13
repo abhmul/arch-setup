@@ -40,7 +40,7 @@ exec --no-startup-id nm-applet
 # Bluetooth and applets
 exec --no-startup-id blueman-applet
 exec --no-startup-id indicator-sound-switcher
-
+exec --no-startup-id mcontrolcenter
 
 bindsym $mod+Shift+n exec --no-startup-id "killall nm-applet; sleep 2; nm-applet"
 bindsym $mod+Shift+b exec --no-startup-id "killall blueman-applet; sleep 2; blueman-applet"
