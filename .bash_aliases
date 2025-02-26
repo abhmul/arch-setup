@@ -7,6 +7,7 @@ alias clean='sudo pacman --clean'
 alias remove='sudo pacman -R'
 alias install='sudo pacman -S'
 alias i='install'
+alias remove-orphans='mamba activate arch && yay -Qdtq | yay -Rns - && mamba deactivate'
 
 # bash management
 alias refresh='exec bash'
