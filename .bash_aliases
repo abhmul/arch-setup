@@ -1,7 +1,7 @@
 alias sudo='sudo '
 
 # package management
-alias up='sudo pacman -Syu && mamba activate arch && yay -Syu && mamba deactivate'
+alias up='sudo pacman -Syu && rustup update && yay -Syu'
 alias search='sudo pacman --search'
 alias clean='sudo pacman --clean'
 alias remove='sudo pacman -R'
@@ -47,7 +47,10 @@ alias gitaliases='gitconfig'
 alias ga='gitaliases'
 
 # Util tools
+# This fixes annotation issue in zoom
+alias zfix="xcompmgr -c -l0 -t0 -r0 -o.00"
 alias djvu2pdf="~/arch-setup/.scripts/djvu2pdf.sh"
+alias mcp="~/mcp-config/start_mcp_servers.sh"
 encrypt-drive() {
 	mamba activate arch
 	python ~/arch-setup/.scripts/encrypt-drive.py "$@"

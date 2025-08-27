@@ -14,3 +14,4 @@ if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" = 1 ]; then
 fi
 
 
+. "$HOME/.cargo/env"
