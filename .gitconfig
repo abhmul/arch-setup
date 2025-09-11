@@ -15,6 +15,10 @@
 	acp = "! f() { git ac \"$1\" && git p; } ; f"
 	ucp = "! f() { git uc \"$1\" && git p; } ; f"
 	up = "! f() { git ac \"$1\" && git frp; } ; f"
+	co = checkout
+	ro = !git rebase origin/main
+	rc = !git -c core.editor=true rebase --continue
+	arc = !git a && git rc
 	smartlog = log --graph --pretty=format:'commit: %C(bold red)%h%Creset %C(red)<%H>%Creset %C(bold magenta)%d %Creset%ndate: %C(bold yellow)%cd %Creset%C(yellow)%cr%Creset%nauthor: %C(bold blue)%an%Creset %C(blue)<%ae>%Creset%n%C(cyan)%s%n%Creset'
 	sl = !git smartlog
 [pull]

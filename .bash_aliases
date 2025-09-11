@@ -2,7 +2,7 @@ alias sudo='sudo '
 
 # package management
 alias up='sudo pacman -Syu && rustup update && yay -Syu'
-alias search='sudo pacman --search'
+alias search='sudo pacman -Q | grep'
 alias clean='sudo pacman --clean'
 alias remove='sudo pacman -R'
 alias install='sudo pacman -S'
