@@ -5,8 +5,6 @@ alias up='sudo pacman -Syu && rustup update && yay -Syu'
 alias search='sudo pacman -Q | grep'
 alias clean='sudo pacman --clean'
 alias remove='sudo pacman -R'
-alias install='sudo pacman -S'
-alias i='install'
 alias remove-orphans='mamba activate arch && yay -Qdtq | yay -Rns - && mamba deactivate'
 
 # bash management
@@ -139,7 +137,7 @@ alias sd='sync-documents'
 alias sdata='sync-data'
 
 # obsidian
-export OBSIDIAN_HOME=$HOME/Documents
+export OBSIDIAN_HOME=$HOME/Documents/vaults
 export MATH_WIKI_NAME='math-wiki'
 export MATH_WIKI_PATH=$OBSIDIAN_HOME/$MATH_WIKI_NAME
 math_wiki() {
@@ -192,6 +190,41 @@ management_vault() {
 }
 alias manage='management_vault'
 
+export AGENT_VAULT_NAME='agent-vault'
+export AGENT_VAULT_PATH=$OBSIDIAN_HOME/$AGENT_VAULT_NAME
+agent_vault() {
+if [[ ! -d $AGENT_VAULT_PATH  ]]
+then
+	mkdir -p $OBSIDIAN_HOME && \
+	cd $OBSIDIAN_HOME && \
+	git clone git@github.com:abhmul/$AGENT_VAULT_NAME.git
+fi
+cd $AGENT_VAULT_PATH
+}
+alias agent='agent_vault'
+
+export RESEARCH_VAULT_NAME='research-vault'
+export RESEARCH_VAULT_PATH=$OBSIDIAN_HOME/$RESEARCH_VAULT_NAME
+research_vault() {
+if [[ ! -d $RESEARCH_VAULT_PATH  ]]
+then
+	mkdir -p $OBSIDIAN_HOME && \
+	cd $OBSIDIAN_HOME && \
+	git clone git@github.com:abhmul/$RESEARCH_VAULT_NAME.git
+fi
+cd $RESEARCH_VAULT_PATH
+}
+alias research='research_vault'
+
+
+# Route python/pip inside claude's process tree to the shared agent env
+# at ~/.local/share/agent-python/.venv. Workaround for claude-code
+# issue #15897 (updatedInput hooks clobbered in multi-hook configs).
+# Only affects the claude subprocess; this shell's PATH is untouched.
+claude() {
+	PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" command claude "$@"
+}
+
 
 
 # docker
@@ -243,3 +276,4 @@ dktest() {
 	sudo docker run -it test:latest /bin/sh
 }
 
+alias claude='claude --effort max'
