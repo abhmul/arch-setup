@@ -57,6 +57,10 @@ cd $HOME && {
 	rm -rfv indicators
 	ln -s $SETUP_PATH/indicators indicators
 }
+cd $HOME && {
+	rm -rfv .snippets
+	ln -s $SETUP_PATH/.snippets .snippets
+}
 mkdir -p $HOME/Pictures
 cd $HOME/Pictures && {
 	rm -fv normandy-sr2.jpg
