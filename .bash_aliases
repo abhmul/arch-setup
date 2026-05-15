@@ -227,7 +227,22 @@ alias research='research_vault'
 # issue #15897 (updatedInput hooks clobbered in multi-hook configs).
 # Only affects the claude subprocess; this shell's PATH is untouched.
 claude() {
-	PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" command claude "$@"
+	PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" command claude --effort max "$@"
+}
+# Initialize pi with default tools
+pi() {
+  local tools="read,grep,find,ls,edit,write,bash"
+
+  for arg in "$@"; do
+    case "$arg" in
+      --tools|-t|--no-tools|-nt|--no-builtin-tools|-nbt)
+        command pi "$@"
+        return
+        ;;
+    esac
+  done
+
+  command pi --tools "$tools" "$@"
 }
 
 
@@ -280,5 +295,3 @@ dktest() {
 	dkbuild && \
 	sudo docker run -it test:latest /bin/sh
 }
-
-alias claude='claude --effort max'
