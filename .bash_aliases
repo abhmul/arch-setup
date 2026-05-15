@@ -47,6 +47,11 @@ alias ga='gitaliases'
 # Util tools
 # This fixes annotation issue in zoom
 alias zfix="xcompmgr -c -l0 -t0 -r0 -o.00"
+term-here() {
+	command kitty --directory "$PWD" >/dev/null 2>&1 & disown
+}
+alias th='term-here'
+alias dup='term-here'
 alias djvu2pdf="~/arch-setup/.scripts/djvu2pdf.sh"
 alias mcp="~/mcp-config/start_mcp_servers.sh"
 encrypt-drive() {

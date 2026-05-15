@@ -26,7 +26,7 @@ sudo pacman -S --needed arandr
 yay -Sa --needed indicator-sound-switcher
 
 # Install tools
-sudo pacman -S --needed neovim ranger scrot xclip firefox sysstat htop cameractrls otf-font-awesome
+sudo pacman -S --needed neovim ranger scrot xclip firefox sysstat htop cameractrls otf-font-awesome kitty
 
 # Setup software
 sudo pacman -S --needed obsidian
@@ -47,6 +47,10 @@ mkdir -p $HOME/.config
 cd $HOME/.config && {
 	rm -rfv i3
 	ln -s $SETUP_PATH/.config/i3 i3
+}
+cd $HOME/.config && {
+	rm -rfv kitty
+	ln -s $SETUP_PATH/.config/kitty kitty
 }
 # TODO - i3blocks setup
 cd $HOME && {
@@ -118,5 +122,4 @@ rm Miniforge3-$(uname)-$(uname -m).sh
 echo -e "\nTo finish setting up mamba, run \`mamba env create -f environment.yml\` to create the arch python environment"
 
 # Run alias commands that do some setup
-
 
