@@ -222,12 +222,22 @@ cd $RESEARCH_VAULT_PATH
 alias research='research_vault'
 
 
-# Route python/pip inside claude's process tree to the shared agent env
-# at ~/.local/share/agent-python/.venv. Workaround for claude-code
+# Route python and venv console scripts inside claude's process tree
+# to ~/.local/share/agent-python/.venv. Workaround for claude-code
 # issue #15897 (updatedInput hooks clobbered in multi-hook configs).
 # Only affects the claude subprocess; this shell's PATH is untouched.
 claude() {
-	PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" command claude --effort max "$@"
+	command env -u PYTHONHOME \
+		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
+		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
+		claude --effort max "$@"
+}
+
+codex() {
+	command env -u PYTHONHOME \
+		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
+		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
+		codex "$@"
 }
 # Initialize pi with default tools
 pi() {
