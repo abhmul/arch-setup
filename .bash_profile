@@ -1,6 +1,7 @@
 # Append to path
 export LOCALPATH=$HOME/.local
-export PATH=$LOCALPATH/bin:$PATH
+export GOPATH=$HOME/go
+export PATH=$LOCALPATH/bin:$GOPATH/bin:$PATH
 
 export EDITOR=nvim
 
