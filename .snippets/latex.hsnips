@@ -1,10 +1,10 @@
 # --- hsnips deploy metadata ---
 # Deployed by: scripts/deploy-hsnips.mjs
-# Deploy date: 2026-05-14T03:00:00.848Z
+# Deploy date: 2026-07-04T22:14:02.600Z
 # Source: /home/abhmul/Documents/paper-writing/test-workspace/.hsnips/latex.hsnips
 # Target: /home/abhmul/.snippets/latex.hsnips
-# Backup: /home/abhmul/.snippets/backups/latex.hsnips.20260514T030000-848Z.bak
-# Source SHA256: 391d687ce1c2503a46a482fca192ca5f01910c314a798ba375669a715fd63288
+# Backup: /home/abhmul/.snippets/backups/latex.hsnips.20260704T221402-600Z.bak
+# Source SHA256: 3dab3cf52498b06eb4434925085ccd0df0e99d3be299d633b2e37133e5e14efc
 # --- end hsnips deploy metadata ---
 
 global
@@ -61,6 +61,21 @@ snippet dm "display math" bA
 \[
 	${1}
 \]$0
+endsnippet
+
+context text(context)
+snippet tit "italics" wA
+\textit{${1}}$0
+endsnippet
+
+context text(context)
+snippet bf "boldface" wA
+\textbf{${1}}$0
+endsnippet
+
+context text(context)
+snippet emf "emphasize" wA
+\emph{${1}}$0
 endsnippet
 
 context text(context)
@@ -239,6 +254,11 @@ snippet cal "mathcal" wA
 endsnippet
 
 context math(context)
+snippet scr "mathscr" wA
+\mathscr{${1}}$0
+endsnippet
+
+context math(context)
 snippet bb "mathbb" wA
 \mathbb{${1}}$0
 endsnippet
@@ -264,28 +284,53 @@ snippet // "fraction" A
 endsnippet
 
 context math(context)
-snippet rd "superscript" wA
+snippet rd "superscript" iA
 ^{${1}}$0
 endsnippet
 
 context math(context)
-snippet inv "inverse" wA
+snippet ld "subscript" iA
+_{${1}}$0
+endsnippet
+
+context math(context)
+snippet inv "inverse" iA
 ^{-1}
 endsnippet
 
 context math(context)
-snippet sr "square" wA
+snippet sr "square" iA
 ^{2}
 endsnippet
 
 context math(context)
 snippet set "set braces" wA
-\{${1}\}$0
+\{${1}\\}$0
+endsnippet
+
+context math(context)
+snippet empty "emptyset" wA
+\emptyset
 endsnippet
 
 context math(context)
 snippet ambset "ambient set builder" wA
-\{${1} \in ${2} : ${3}\}$0
+\{${1} \in ${2} : ${3}\\}$0
+endsnippet
+
+context math(context)
+snippet xx "times" wA
+\times
+endsnippet
+
+context math(context)
+snippet sum "sum" wA
+\sum_{${1}}^{${2}} ${3}$0
+endsnippet
+
+context math(context)
+snippet prod "prod" wA
+\prod_{${1}}^{${2}} ${3}$0
 endsnippet
 
 context math(context)
@@ -319,6 +364,21 @@ D_{\mathrm{KL}}\left( ${1} \,\middle\|\, ${2} \right)$0
 endsnippet
 
 context math(context)
+snippet and "AND" wA
+\wedge
+endsnippet
+
+context math(context)
+snippet or "OR" wA
+\vee
+endsnippet
+
+context math(context)
+snippet not "NOT" wA
+\neg
+endsnippet
+
+context math(context)
 snippet to "to" wA
 \to
 endsnippet
@@ -344,6 +404,11 @@ snippet le "less equal" wA
 endsnippet
 
 context math(context)
+snippet := "coloneq" wA
+\coloneq
+endsnippet
+
+context math(context)
 snippet inn "element of" wA
 \in
 endsnippet
@@ -351,6 +416,11 @@ endsnippet
 context math(context)
 snippet nin "not element of" wA
 \notin
+endsnippet
+
+context math(context)
+snippet subs "subset" A
+\subset
 endsnippet
 
 context math(context)
@@ -366,6 +436,11 @@ endsnippet
 context math(context)
 snippet cup "cup" wA
 \cup
+endsnippet
+
+context math(context)
+snippet comp "compose" wA
+\circ
 endsnippet
 
 context math(context)

@@ -6,6 +6,7 @@ alias search='sudo pacman -Q | grep'
 alias clean='sudo pacman --clean'
 alias remove='sudo pacman -R'
 alias remove-orphans='mamba activate arch && yay -Qdtq | yay -Rns - && mamba deactivate'
+alias clear-swap='sudo systemctl restart dev-zram0.swap'
 
 # bash management
 alias refresh='exec bash'
@@ -237,11 +238,11 @@ codex() {
 	command env -u PYTHONHOME \
 		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
 		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
-		codex "$@"
+		codex -p auto "$@"
 }
 # Initialize pi with default tools
 pi() {
-  local tools="read,grep,find,ls,edit,write,bash"
+  local tools="read,grep,find,ls,edit,write,bash,bg_run,bg_status,bg_logs,bg_kill"
 
   for arg in "$@"; do
     case "$arg" in
