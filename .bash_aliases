@@ -234,11 +234,44 @@ claude() {
 		claude --effort max "$@"
 }
 
-codex() {
+# Both accounts use the same launch options and Python environment.
+# ~/.codex-academic shares configuration and memory with ~/.codex.
+_codex_account() {
+	local codex_account_home="$1"
+	local codex_account_binary="$2"
+	shift 2
+	local -a codex_profile_args=(-p auto)
+	# Management commands do not accept a runtime profile.
+	case "${1-}" in
+		login|logout|doctor|app-server|agents|queue|remote-control|completion|update|migrate-rollouts|plugin|mcp-server|exec-server|features|apply|cloud|help)
+			codex_profile_args=()
+			;;
+		resume)
+			# Remote resume restores saved permissions and rejects profile overrides.
+			local codex_arg
+			for codex_arg in "$@"; do
+				case "$codex_arg" in
+					--remote|--remote=*) codex_profile_args=(); break ;;
+				esac
+			done
+			;;
+		debug)
+			[[ "${2-}" == prompt-input ]] || codex_profile_args=()
+			;;
+	esac
 	command env -u PYTHONHOME \
+		CODEX_HOME="$codex_account_home" \
 		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
 		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
-		codex -p auto "$@"
+		"$codex_account_binary" "${codex_profile_args[@]}" -c 'cli_auth_credentials_store="file"' "$@"
+}
+
+codex() {
+	_codex_account "$HOME/.codex" "$HOME/.local/bin/codex" "$@"
+}
+
+codex-academic() {
+	_codex_account "$HOME/.codex-academic" "$HOME/.codex-academic/bin/codex" "$@"
 }
 # Initialize pi with default tools
 pi() {
