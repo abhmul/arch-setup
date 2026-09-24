@@ -229,10 +229,14 @@ alias agent-python='source $HOME/.local/share/agent-python/.venv/bin/activate'
 # issue #15897 (updatedInput hooks clobbered in multi-hook configs).
 # Only affects the claude subprocess; this shell's PATH is untouched.
 claude() {
+	local -a agent_tracker=()
+	if [[ -x "$HOME/.local/bin/i3-session" ]]; then
+		agent_tracker=("$HOME/.local/bin/i3-session" agent-launch --launcher claude --)
+	fi
 	command env -u PYTHONHOME \
 		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
 		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
-		claude "$@"
+		"${agent_tracker[@]}" claude "$@"
 }
 # Effort is not forced here (was --effort max until 2026-09-18): the settings
 # files decide (user modelSettings / project .claude/settings.json), so /effort
@@ -244,6 +248,12 @@ _codex_account() {
 	local codex_account_home="$1"
 	local codex_account_binary="$2"
 	shift 2
+	local agent_launcher=codex
+	[[ "$codex_account_home" != "$HOME/.codex-academic" ]] || agent_launcher=codex-academic
+	local -a agent_tracker=()
+	if [[ -x "$HOME/.local/bin/i3-session" ]]; then
+		agent_tracker=("$HOME/.local/bin/i3-session" agent-launch --launcher "$agent_launcher" --)
+	fi
 	local -a codex_profile_args=(-p auto)
 	# Management commands do not accept a runtime profile.
 	case "${1-}" in
@@ -267,7 +277,7 @@ _codex_account() {
 		CODEX_HOME="$codex_account_home" \
 		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
 		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
-		"$codex_account_binary" "${codex_profile_args[@]}" -c 'cli_auth_credentials_store="file"' "$@"
+		"${agent_tracker[@]}" "$codex_account_binary" "${codex_profile_args[@]}" -c 'cli_auth_credentials_store="file"' "$@"
 }
 
 codex() {

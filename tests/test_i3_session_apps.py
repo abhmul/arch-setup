@@ -178,7 +178,8 @@ class ApplicationCaptureTests(unittest.TestCase):
             result = apps.capture_window(window("Code", title), {})
             self.assertEqual(str(target) in result["command"], expected)
 
-    def test_kitty_uses_matching_shell_directory_and_does_not_relaunch_job(self):
+    @patch("i3_session.agent_launch.capture_agent", return_value=(None, []))
+    def test_kitty_uses_matching_shell_directory_and_does_not_relaunch_job(self, _agent_capture):
         child_dirs = {10: str(self.root), 11: str(self.root / "project"), 12: str(self.root / "other")}
         with patch.object(apps, "_window_pid", return_value=10), patch.object(apps, "_process_args", side_effect=lambda pid: {10: ["kitty", "dangerous-job"], 11: ["bash"], 12: ["bash"]}[pid]), patch.object(apps, "_process_cwd", side_effect=child_dirs.get), patch.object(Path, "read_text", return_value="11 12"), patch.object(Path, "read_bytes", side_effect=lambda: b"WINDOWID=123\0"):
             result = apps.capture_window(window("kitty"), {})

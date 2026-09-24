@@ -272,6 +272,17 @@ def capture_window(node: dict[str, Any], config: dict[str, Any]) -> dict[str, An
     elif app == "kitty":
         cwd, warnings = _kitty_cwd(node, pid)
         result.update(command=["kitty", "--directory", cwd], cwd=cwd, warnings=warnings)
+        if pid:
+            from . import agent_launch, config as configuration
+            directory = config.get("_state_dir", configuration.state_directory())
+            try:
+                binding, agent_warnings = agent_launch.capture_agent(directory, pid, node.get("window"))
+            except (OSError, ValueError, KeyError, TypeError) as exc:
+                binding, agent_warnings = None, [f"Agent tracking unavailable; terminal will reopen as a shell: {exc}"]
+            result["warnings"].extend(agent_warnings)
+            if binding:
+                result["agent_session"] = binding
+                result["command"] = agent_launch.terminal_command(directory, cwd, binding)
     elif app in CODE_CLASSES:
         target, warnings = _code_target(title, config)
         command = [config.get("code_executable", CODE_CLASSES[app]), "--new-window"]

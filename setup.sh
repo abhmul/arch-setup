@@ -114,7 +114,7 @@ cd $HOME && mkdir -p .local/bin
 
 # Desktop checkpoint helper (also usable separately on an existing workstation).
 # Expose project folders in VS Code titles for reliable folder capture.
-"$SETUP_PATH/.scripts/install-i3-session" --configure-vscode
+"$SETUP_PATH/.scripts/install-i3-session" --configure-vscode --configure-agents
 
 # Install miniconda
 cd $HOME

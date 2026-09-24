@@ -168,7 +168,8 @@ def restore(directory, config, args):
             result["selection"] = reason
             result["launches"] = [{"workspace": config["workspace_map"].get(ws["name"], ws["name"]),
                                   "command": window.get("command"), "cold_command": window.get("cold_command"),
-                                  "reuse_new_windows": bool(window.get("reuse_new_windows")), "cwd": window.get("cwd")}
+                                  "reuse_new_windows": bool(window.get("reuse_new_windows")), "cwd": window.get("cwd"),
+                                  "agent_session": window.get("agent_session")}
                                  for ws in snapshot["workspaces"] for window in ws["windows"]]
             print(json.dumps(result, indent=2, ensure_ascii=False))
             return 0
@@ -211,15 +212,48 @@ def parser():
     restore_parser.add_argument("--dry-run", action="store_true", help="Print launches without changing the desktop")
     restore_parser.add_argument("--retry", action="store_true", help="Retry a partial attempt after reviewing/clearing target workspaces")
     restore_parser.add_argument("--notify", action="store_true", help="Send a desktop notification on success or failure")
+    agent_launch = commands.add_parser("agent-launch", help="Run a native agent with terminal tracking")
+    agent_launch.add_argument("--launcher", choices=("codex", "codex-academic", "claude"), required=True)
+    agent_launch.add_argument("argv", nargs=argparse.REMAINDER)
+    agent_hook = commands.add_parser("agent-hook", help="Receive a native agent lifecycle event")
+    agent_hook.add_argument("--tool", choices=("codex", "claude"), required=True)
+    agent_resume = commands.add_parser("agent-resume", help="Reopen an exact saved agent conversation")
+    agent_resume.add_argument("--binding", required=True)
+    commands.add_parser("agents", help="Show persistent terminal-to-agent associations")
+    commands.add_parser("forget-agent", help="Forget this terminal's agent association without deleting its conversation")
     return root
 
 
 def main(argv=None):
-    os.umask(0o077)
     args = parser().parse_args(argv)
+    if args.command not in {"agent-launch", "agent-resume"}:
+        os.umask(0o077)
     try:
-        config = configuration.load(args.config, args.delay, args.interval)
         directory = args.state_dir.expanduser().resolve()
+        if args.command.startswith("agent-") or args.command in {"agents", "forget-agent"}:
+            from i3_session import agent_launch, agent_process
+            from i3_session.agent_sessions import Registry
+            if args.command == "agent-launch":
+                return agent_launch.launch(directory, args.launcher, args.argv)
+            if args.command == "agent-hook":
+                try:
+                    agent_launch.hook(directory, args.tool, json.load(sys.stdin))
+                except (OSError, ValueError, KeyError, TypeError):
+                    # Tracking must not inject context or block native agent work.
+                    pass
+                return 0
+            if args.command == "agent-resume":
+                return agent_launch.resume(directory, json.loads(args.binding))
+            if args.command == "agents":
+                print(json.dumps(Registry(directory).read(), indent=2))
+                return 0
+            context = agent_process.terminal_context(os.getpid())
+            if not context:
+                raise ValueError("Run forget-agent from a single-pane kitty terminal's shell")
+            forgotten = Registry(directory).forget(context)
+            print("Agent bookmark forgotten; conversation retained" if forgotten else "This terminal has no agent bookmark")
+            return 0
+        config = dict(configuration.load(args.config, args.delay, args.interval), _state_dir=str(directory))
         if args.command == "record":
             return record(directory, config)
         if args.command == "start":

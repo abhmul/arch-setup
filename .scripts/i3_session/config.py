@@ -9,6 +9,8 @@ DEFAULTS = Path(__file__).resolve().parents[2] / ".config/i3-session/config.json
 
 
 def state_directory():
+    if os.environ.get("I3_SESSION_STATE_DIR"):
+        return Path(os.environ["I3_SESSION_STATE_DIR"]).expanduser()
     return Path(os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state") / "i3-session"
 
 

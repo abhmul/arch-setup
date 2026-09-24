@@ -5,13 +5,16 @@ umask 077
 repo=$(dirname -- "$(dirname -- "$(readlink -f -- "$0")")")
 data_dir=${XDG_DATA_HOME:-$HOME/.local/share}/i3-session
 config_dir=${XDG_CONFIG_HOME:-$HOME/.config}/i3-session
-state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/i3-session
+state_dir=${I3_SESSION_STATE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/i3-session}
 configure_vscode=false
-case "${1-}" in
-    --configure-vscode) configure_vscode=true ;;
-    '') ;;
-    *) printf '%s\n' 'Usage: install-i3-session [--configure-vscode]' >&2; exit 2 ;;
-esac
+configure_agents=false
+for option in "$@"; do
+    case "$option" in
+        --configure-vscode) configure_vscode=true ;;
+        --configure-agents) configure_agents=true ;;
+        *) printf '%s\n' 'Usage: install-i3-session [--configure-vscode] [--configure-agents]' >&2; exit 2 ;;
+    esac
+done
 command -v uv >/dev/null || { printf '%s\n' 'Install uv before running this installer.' >&2; exit 1; }
 for tool in i3-msg xprop; do
     command -v "$tool" >/dev/null || { printf 'Required command is missing: %s\n' "$tool" >&2; exit 1; }
@@ -43,5 +46,20 @@ if "$configure_vscode"; then
     "$data_dir/venv/bin/python" -B "$repo/.scripts/i3_session/install.py" \
         --configure-vscode "${XDG_CONFIG_HOME:-$HOME/.config}/Code/User/settings.json" \
         --backup-dir "$state_dir/install"
+fi
+if "$configure_agents"; then
+    unset PYTHONHOME
+    for account in .codex .codex-academic; do
+        [[ -d "$HOME/$account" ]] || continue
+        codex_binary=$HOME/.local/bin/codex
+        [[ "$account" != .codex-academic ]] || codex_binary=$HOME/.codex-academic/bin/codex
+        "$data_dir/venv/bin/python" -B "$repo/.scripts/i3_session/agent_install.py" \
+            --codex-hooks "$HOME/$account/hooks.json" --codex-binary "$codex_binary" \
+            --trust-installed-hooks --backup-dir "$state_dir/install"
+    done
+    if [[ -d "$HOME/.claude" ]]; then
+        "$data_dir/venv/bin/python" -B "$repo/.scripts/i3_session/agent_install.py" \
+            --claude-settings "$HOME/.claude/settings.json" --backup-dir "$state_dir/install"
+    fi
 fi
 printf '%s\n' 'Installed i3-session. Start recording with: ~/.local/bin/i3-session start'

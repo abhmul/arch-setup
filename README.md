@@ -5,7 +5,7 @@ Setup for my computers running arch.
 
 `i3-session` records desktop layouts with a configurable delay (five minutes by default), then restores the previous login's checkpoint on demand. Press **Super+Ctrl+Shift+R**, or run `~/.local/bin/i3-session restore` from an otherwise unused workspace. Recording starts automatically with i3 after installation.
 
-Install just this feature on an existing workstation with `~/.scripts/install-i3-session --configure-vscode`; then run `~/.local/bin/i3-session start` and reload i3's configuration.
+Install just this feature on an existing workstation with `~/.scripts/install-i3-session --configure-vscode --configure-agents`; then run `~/.local/bin/i3-session start` and reload i3's configuration. Agent tracking remembers exact Codex/Claude conversations even after quitting their terminal interfaces.
 
 See [the desktop checkpoint guide](docs/i3-session.md) for configuration, snapshots, browser/VS Code handling, recovery, and verification. Do not run the full `setup.sh` just to install or update this feature.
 

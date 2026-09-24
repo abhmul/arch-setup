@@ -7,12 +7,14 @@
 On an existing workstation, run:
 
 ```sh
-~/arch-setup/.scripts/install-i3-session --configure-vscode
+~/arch-setup/.scripts/install-i3-session --configure-vscode --configure-agents
 ~/.local/bin/i3-session start
 i3-msg reload
 ```
 
 The installer requires `uv`, `i3-msg`, and `xprop`. It creates a dedicated Python environment under `${XDG_DATA_HOME:-~/.local/share}/i3-session/venv`, installs pinned dependencies, and adds configuration and command symlinks without replacing unrelated existing paths. It does not run the workstation bootstrap. Python 3.10 or newer is required; when available, installation uses the shared agent Python interpreter as its base. Runtime dependencies remain separate from the agent environment.
+
+`--configure-agents` merges three native lifecycle hooks into existing Codex and Claude settings, preserving other hooks and making private backups under `install/` in the state directory. Both installed Codex account directories are configured; Codex itself supplies the trust hashes, and only the added hook definitions are trusted. Existing symlinks and other trust entries are preserved. New shells load the tracked launcher wrappers; run `source ~/.bash_aliases` in an existing shell to update it. The recorder can identify already running local sessions without restarting them. To update a running recorder after a code change, run `i3-session stop` followed by `i3-session start`.
 
 The i3 configuration starts the recorder at graphical login. **Super+Ctrl+Shift+R** restores the previous login's checkpoint and reports the result by desktop notification. To use a terminal instead:
 
@@ -52,12 +54,14 @@ i3-session --delay 10m --interval 20s start
 
 Global options precede the subcommand. Duration suffixes `s`, `m`, and `h` are supported. `--state-dir /path` overrides the persistent state directory for every operation. The `status` output reports the running recorder's actual delay and interval, which may differ from newly edited settings until it is restarted.
 
+For a custom state directory with agent tracking, export `I3_SESSION_STATE_DIR=/absolute/path` consistently in the recorder's and your shells' environments. This also routes native hooks and `forget-agent` to the same registry. An explicitly restored agent inherits the restore command's state directory automatically.
+
 `exclude_workspaces` and `exclude_classes` contain exact names. `workspace_map` and `output_map` map saved names to destination names. If a saved monitor is absent, restoration uses an available output and reports a warning. Scratchpad and transient dialog windows are excluded.
 
 ## Applications
 
 - Firefox and Chromium-family browsers retain identifiable profile selectors. Chromium also retains an explicit valid remote debugging port and loopback debugging address, including those used by `chatgpt-send browser-start`; these are captured from the running browser, with no fixed profile paths or ports. Malformed, conflicting, or non-loopback debugging settings produce a warning and are omitted. A cold launch lets the browser perform its normal startup; any windows it reopens are used for the saved slots before additional blank windows are requested. The wrapper does not capture or reproduce tabs or navigation history. Windows are placed using their new window IDs, independent of their titles. If native startup opens more matching windows than there are saved slots, restoration stops and leaves those new windows open for review.
-- Kitty reopens a shell in the captured working directory. A matching shell's `WINDOWID` distinguishes separate OS windows. Internal tabs/splits, shell variables, scrollback, and running foreground jobs are not recreated. Codex and Claude conversations are not automatically resumed: their terminals reopen as shells, without replaying commands. Ambiguous directories generate a warning and use the terminal process's directory.
+- Kitty reopens in the captured working directory. A matching shell's `WINDOWID` distinguishes separate OS windows. With agent tracking installed, an exact Codex/Claude conversation can be resumed as described below. Internal tabs/splits, shell variables, scrollback, and other running foreground jobs are not recreated. Ambiguous directories generate a warning and use the terminal process's directory.
 - VS Code reopens local folders or saved `.code-workspace` files. The optional installer setting appends ` [i3-session:${rootPath}] [i3-session-remote:${remoteName}]` to the existing `window.title` template. It preserves other settings, comments, and any custom title prefix, and backs up the original settings under the state directory's `install/` subdirectory before editing. These markers appear in window titles; workspace-level title overrides can hide them. Remote, untitled, missing, or unidentified folders reopen as empty windows with a warning. Editor tabs and unsaved state are left to VS Code.
 - Obsidian uses an unambiguous registered vault name to reopen that vault. Note content is not read.
 - Other applications require an explicit launch rule. Unknown applications remain visible in snapshot warnings and are skipped during restore.
@@ -73,6 +77,25 @@ An application rule has an exact `class`, a literal argv array, and optionally a
 ```
 
 Arguments are passed directly to the application without a shell. Rules do not interpolate titles or run saved foreground commands. They must open a new window matching the captured class and instance; singleton applications or apps that restore several windows at once may need a custom rule. Let restoration finish before opening other windows: several matching new windows cause it to stop, but one unrelated matching window cannot reliably be distinguished from a window opened by the launch command.
+
+## Codex and Claude conversations
+
+Use one agent session per Kitty OS window, started with the normal `codex`, `codex-academic`, or `claude` shell function. Native hooks and verified process metadata record its exact session UUID, account, working directory, and transcript path. Quitting the TUI keeps that association while its shell remains open, even for longer than the desktop delay. Launching another interactive session in that terminal clears the old association until the new identity is confirmed.
+
+Restore uses `codex resume UUID`, `codex-academic resume UUID`, or `claude --resume UUID` through your existing shell wrappers. The saved layout fixes which conversation is selected; the agent loads that conversation's latest persisted contents, including turns saved after the layout checkpoint. No transcript is copied, no prompt is submitted, and neither `--last` nor `--continue` is used. Model/permission configuration remains native. Existing native continuation policies still apply; this is not a rewind of agent execution or a promise to suppress queued native work.
+
+After the resumed agent exits, an interactive shell stays open. If its transcript/account is missing, or the agent refuses the resume, the shell displays a diagnostic. Desktop restore reports window placement, not proof that the agent loaded successfully. Already running/shared sessions remain subject to the agent's native ownership rules; the tool does not remove locks, stop a daemon, force a local backend, or take over another live client.
+
+The supported identity is a unique foreground local session in a single-pane Kitty window. Splits/tabs, remote attachments, dashboards, nested agents, ambiguous daemon ownership, or unavailable session metadata fall back to a shell with a warning. An unsupported foreground agent suppresses an older bookmark. Noninteractive print/management commands do not replace it. Hooks do not output model context or alter native agent decisions. Old snapshots captured before installation contain ordinary shell recipes and are not retroactively rewritten.
+
+Inspect associations and forget the current terminal's association with:
+
+```sh
+i3-session agents
+i3-session forget-agent
+```
+
+Run `forget-agent` from that terminal's shell after quitting its agent. This revokes the terminal's recorded associations, including recipes already saved in delayed/manual snapshots, without deleting any native conversation. An explicit later agent launch can establish a new association. Closing the terminal is still governed by the desktop delay: keep the window in the chosen checkpoint, or use `i3-session save` before a longer shutdown routine.
 
 ## Checkpoints and recovery
 
@@ -107,6 +130,8 @@ i3-session stop
 
 Tests exercise delayed selection, login rotation, short sessions, atomic writes, retention, private state, locks, dry-run and repeated/partial restore behavior, application recipes, and VS Code settings edits. When Xvfb is installed, backend tests start a separate i3 server and synthetic windows to verify real layout restoration without touching the user's desktop.
 
+Agent tests cover exact session/account identity, nested/background exclusions, ambiguity, quitting to a shell, races between hooks and capture, forgotten bookmarks, private state, and hook installation/trust. The optional Kitty test uses a compiled fake native agent and isolated shell configuration on the private X server; it makes no model calls and leaves live agent sessions alone.
+
 ```sh
 uv pip install --python ~/.local/share/i3-session/venv/bin/python pytest
 ~/.local/share/i3-session/venv/bin/python -B -m pytest -q -p no:cacheprovider tests
@@ -122,4 +147,6 @@ Optional application tests use the installed browsers/editor with disposable pro
 ```sh
 I3_SESSION_TEST_CODE=1 ~/.local/share/i3-session/venv/bin/python -B -m pytest -q -p no:cacheprovider tests/test_i3_session_code_integration.py
 I3_SESSION_BROWSER_TESTS=1 ~/.local/share/i3-session/venv/bin/python -B -m pytest -q -p no:cacheprovider tests/test_i3_session_browser_integration.py
+I3_SESSION_TEST_AGENTS=1 ~/.local/share/i3-session/venv/bin/python -B -m pytest -q -p no:cacheprovider tests/test_i3_session_agent_integration.py
+I3_SESSION_TEST_CODEX_TRUST=1 ~/.local/share/i3-session/venv/bin/python -B -m pytest -q -p no:cacheprovider tests/test_i3_session_agent_install_integration.py
 ```

@@ -445,6 +445,10 @@ def restore(snapshot, config, *, ipc=None, launch=None):
                         ipc.command(f'[con_id={int(new["id"])}] sticky enable')
                     report["restored"].append({"workspace": name, "source_id": window["source_id"],
                                                "window_id": new["window"]})
+                    if window.get("agent_session"):
+                        report["warnings"].append(
+                            f"Workspace {name}: terminal restored; check the native agent for resume success. "
+                            "Window placement does not confirm conversation loading.")
                     placed.append((new["id"], window))
                     if group is not None:
                         remaining[group] -= 1
