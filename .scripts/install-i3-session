@@ -1,0 +1,47 @@
+#!/bin/bash
+# Install only this feature; never run the workstation-wide setup as an update.
+set -euo pipefail
+umask 077
+repo=$(dirname -- "$(dirname -- "$(readlink -f -- "$0")")")
+data_dir=${XDG_DATA_HOME:-$HOME/.local/share}/i3-session
+config_dir=${XDG_CONFIG_HOME:-$HOME/.config}/i3-session
+state_dir=${XDG_STATE_HOME:-$HOME/.local/state}/i3-session
+configure_vscode=false
+case "${1-}" in
+    --configure-vscode) configure_vscode=true ;;
+    '') ;;
+    *) printf '%s\n' 'Usage: install-i3-session [--configure-vscode]' >&2; exit 2 ;;
+esac
+command -v uv >/dev/null || { printf '%s\n' 'Install uv before running this installer.' >&2; exit 1; }
+for tool in i3-msg xprop; do
+    command -v "$tool" >/dev/null || { printf 'Required command is missing: %s\n' "$tool" >&2; exit 1; }
+done
+link_without_replacing() {
+    local source=$1 target=$2
+    if [[ -e "$target" || -L "$target" ]]; then
+        if [[ "$(readlink -f -- "$target")" != "$(readlink -f -- "$source")" ]]; then
+            printf 'Existing path preserved; cannot install link: %s\n' "$target" >&2
+            return 1
+        fi
+    else
+        mkdir -p -- "$(dirname -- "$target")"
+        ln -s -- "$source" "$target"
+    fi
+}
+if [[ ! -x "$data_dir/venv/bin/python" ]]; then
+    interpreter=python3
+    if [[ -x "$HOME/.local/share/agent-python/.venv/bin/python" ]]; then
+        interpreter=$HOME/.local/share/agent-python/.venv/bin/python
+    fi
+    uv venv --python "$interpreter" "$data_dir/venv"
+fi
+uv pip install --python "$data_dir/venv/bin/python" -r "$repo/.config/i3-session/requirements.txt"
+link_without_replacing "$repo/.config/i3-session" "$config_dir"
+link_without_replacing "$repo/.scripts/i3-session" "$HOME/.local/bin/i3-session"
+if "$configure_vscode"; then
+    unset PYTHONHOME
+    "$data_dir/venv/bin/python" -B "$repo/.scripts/i3_session/install.py" \
+        --configure-vscode "${XDG_CONFIG_HOME:-$HOME/.config}/Code/User/settings.json" \
+        --backup-dir "$state_dir/install"
+fi
+printf '%s\n' 'Installed i3-session. Start recording with: ~/.local/bin/i3-session start'

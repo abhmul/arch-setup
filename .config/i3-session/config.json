@@ -1,0 +1,18 @@
+{
+  "restore_delay_seconds": 300,
+  "capture_interval_seconds": 15,
+  "history_seconds": 1800,
+  "restore_timeout_seconds": 30,
+  "restore_poll_seconds": 0.1,
+  "restore_settle_seconds": 0.3,
+  "browser_settle_seconds": 1,
+  "startup_timeout_seconds": 5,
+  "connection_failure_limit": 3,
+  "log_max_bytes": 1048576,
+  "log_backups": 2,
+  "exclude_workspaces": [],
+  "exclude_classes": [],
+  "workspace_map": {},
+  "output_map": {},
+  "applications": []
+}

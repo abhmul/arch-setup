@@ -1,0 +1,10 @@
+#!/bin/sh
+# Resolve the repository through either ~/.scripts or ~/.local/bin symlinks.
+script_dir=$(dirname -- "$(readlink -f -- "$0")")
+runtime=${I3_SESSION_PYTHON:-${XDG_DATA_HOME:-$HOME/.local/share}/i3-session/venv/bin/python}
+if [ ! -x "$runtime" ]; then
+    printf '%s\n' 'i3-session is not installed. Run ~/arch-setup/.scripts/install-i3-session.' >&2
+    exit 1
+fi
+unset PYTHONHOME
+exec "$runtime" -B "$script_dir/i3_session/cli.py" "$@"

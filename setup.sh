@@ -26,7 +26,7 @@ sudo pacman -S --needed arandr
 yay -Sa --needed indicator-sound-switcher
 
 # Install tools
-sudo pacman -S --needed neovim ranger scrot xclip firefox sysstat htop cameractrls otf-font-awesome kitty
+sudo pacman -S --needed neovim ranger scrot xclip firefox sysstat htop cameractrls otf-font-awesome kitty uv xorg-xprop
 
 # Setup software
 sudo pacman -S --needed obsidian
@@ -112,6 +112,10 @@ echo -e "\nSetup the rclone config, then run \`sd\` and \`library\` to get Googl
 cd $HOME && mkdir -p dev
 cd $HOME && mkdir -p .local/bin
 
+# Desktop checkpoint helper (also usable separately on an existing workstation).
+# Expose project folders in VS Code titles for reliable folder capture.
+"$SETUP_PATH/.scripts/install-i3-session" --configure-vscode
+
 # Install miniconda
 cd $HOME
 wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
@@ -122,4 +126,3 @@ rm Miniforge3-$(uname)-$(uname -m).sh
 echo -e "\nTo finish setting up mamba, run \`mamba env create -f environment.yml\` to create the arch python environment"
 
 # Run alias commands that do some setup
-

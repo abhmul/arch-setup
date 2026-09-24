@@ -26,6 +26,10 @@ exec --no-startup-id dex --autostart --environment i3
 # Run the startup script
 exec --no-startup-id ~/.scripts/startup.sh
 
+# Keep a delayed desktop checkpoint; restore it manually after the next login.
+exec --no-startup-id ~/.scripts/i3-session start
+bindsym $mod+Control+Shift+r exec --no-startup-id ~/.scripts/i3-session restore --notify
+
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
 
@@ -243,4 +247,3 @@ bindsym $mod+r mode "resize"
 bar {
         status_command SCRIPT_DIR=~/.config/i3blocks i3blocks
 }
-

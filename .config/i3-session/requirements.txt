@@ -1,0 +1,8 @@
+# i3-resurrect supplies layout serialization; our launcher does not use xdotool.
+i3-resurrect==1.4.2
+i3ipc==2.2.1
+click==8.5.0
+natsort==8.4.0
+psutil==7.2.2
+python-xlib==0.33
+six==1.17.0
