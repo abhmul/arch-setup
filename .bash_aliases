@@ -223,6 +223,7 @@ cd $RESEARCH_VAULT_PATH
 alias research='research_vault'
 
 
+alias agent-python='source $HOME/.local/share/agent-python/.venv/bin/activate'
 # Route python and venv console scripts inside claude's process tree
 # to ~/.local/share/agent-python/.venv. Workaround for claude-code
 # issue #15897 (updatedInput hooks clobbered in multi-hook configs).
@@ -231,8 +232,11 @@ claude() {
 	command env -u PYTHONHOME \
 		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
 		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
-		claude --effort max "$@"
+		claude "$@"
 }
+# Effort is not forced here (was --effort max until 2026-09-18): the settings
+# files decide (user modelSettings / project .claude/settings.json), so /effort
+# and per-project defaults take effect. Pass --effort <level> by hand to override.
 
 # Both accounts use the same launch options and Python environment.
 # ~/.codex-academic shares configuration and memory with ~/.codex.
