@@ -13,8 +13,9 @@ This repository is the source of truth for the user's Arch Linux workstation set
 
 - `setup.sh`: package installation and symlink bootstrap.
 - `.bash_aliases`: shell aliases/functions; sourced by `.bashrc.extra`.
-- `.bashrc.extra`: extra shell initialization loaded from the user's `.bashrc`.
-- `.bash_profile`: login shell setup and X startup.
+- `.bashrc.extra`: extra shell initialization loaded from `.bashrc`.
+- `.bashrc`: interactive shell setup, including `.bashrc.extra`.
+- `.bash_profile`: login shell setup and X startup; loads `.bashrc` for interactive login shells.
 - `.config/i3/config`: i3 window-manager config; symlinked to `~/.config/i3`.
 - `.config/kitty/kitty.conf`: kitty terminal config; symlinked to `~/.config/kitty`.
 - `.scripts/`: helper scripts used by shell aliases and i3 bindings.
@@ -22,7 +23,7 @@ This repository is the source of truth for the user's Arch Linux workstation set
 
 ## Deployment Model
 
-`setup.sh` assumes it is run from the repository root. It sets `SETUP_PATH=$(pwd)` and then symlinks tracked files/directories into `$HOME`, including `.bash_aliases`, `.bashrc.extra`, `.bash_profile`, `.scripts`, `.snippets`, `.config/i3`, and `.config/kitty`.
+`setup.sh` assumes it is run from the repository root. It sets `SETUP_PATH=$(pwd)` and then symlinks tracked files/directories into `$HOME`, including `.bash_aliases`, `.bashrc`, `.bashrc.extra`, `.bash_profile`, `.scripts`, `.snippets`, `.config/i3`, and `.config/kitty`.
 
 Prefer editing the tracked source file in this repository over editing the symlink target directly. If changing deployment behavior, update `setup.sh` and verify that the target symlink path still matches the tracked layout.
 
@@ -39,7 +40,9 @@ Use non-destructive checks by default:
 
 - `bash -n setup.sh`
 - `bash -n .bash_aliases`
+- `bash -n .bashrc`
 - `bash -n .bashrc.extra`
+- `bash -n .bash_profile`
 - `kitty +runpy 'from kitty.config import load_config; bad=[]; load_config(".config/kitty/kitty.conf", accumulate_bad_lines=bad); [print(b) for b in bad]; raise SystemExit(1 if bad else 0)'`
 - `i3 -C -c .config/i3/config` when i3 is installed
 

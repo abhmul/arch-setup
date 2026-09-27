@@ -73,13 +73,8 @@ cd $HOME/Pictures && {
 cd $HOME && {
 	rm -fv .bashrc.extra
 	ln -s $SETUP_PATH/.bashrc.extra .bashrc.extra
-	
-	if grep -R -q "source \$HOME/.bashrc.extra" .bashrc
-	then
-		:
-	else
-		echo -e "\nsource \$HOME/.bashrc.extra" >> .bashrc
-	fi
+	rm -fv .bashrc
+	ln -s $SETUP_PATH/.bashrc .bashrc
 
 	rm -fv .bash_aliases
 	ln -s $SETUP_PATH/.bash_aliases .bash_aliases
@@ -87,8 +82,6 @@ cd $HOME && {
 	ln -s $SETUP_PATH/.bash_profile .bash_profile
 	echo -e "\nCurrent state of bash settings"
 	ls -alh | grep .bash
-	echo -e "\nUsing new bashrc"
-	source ~/.bashrc
 }
 
 # Setup rc.local

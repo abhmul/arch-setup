@@ -12,3 +12,8 @@ fi
 
 
 source "$HOME/.cargo/env"
+
+# Login shells also need the interactive shell setup.
+if [[ $- == *i* ]]; then
+	source "$HOME/.bashrc"
+fi
