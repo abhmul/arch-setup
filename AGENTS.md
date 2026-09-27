@@ -19,7 +19,7 @@ This repository is the source of truth for the user's Arch Linux workstation set
 - `.config/i3/config`: i3 window-manager config; symlinked to `~/.config/i3`.
 - `.config/kitty/kitty.conf`: kitty terminal config; symlinked to `~/.config/kitty`.
 - `.scripts/`: helper scripts used by shell aliases and i3 bindings.
-- `.snippets/`: HyperSnips/VSCode snippet files.
+- `.snippets/`: HyperSnips/VSCode snippet files, and `obsidian-latex-suite.js`, the Obsidian Latex Suite snippets shared by the `research-vault`, `math-wiki` and `math-learning` vaults, which load it as `~/.snippets/obsidian-latex-suite.js`.
 
 ## Deployment Model
 
