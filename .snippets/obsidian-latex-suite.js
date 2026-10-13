@@ -56,12 +56,12 @@ export default [
 	{ trigger: "//", replacement: "\\frac{$0}{$1}$2", options: "mA" },
 	{ trigger: "ee", replacement: "e^{ $0 }$1", options: "mA" },
 	{ trigger: "invs", replacement: "^{-1}", options: "mA" },
-	{ trigger: "supp", replacement: "\\mathrm{supp}", options: "mA" },
+	{ trigger: "supp", replacement: "\\operatorname{supp}", options: "mA" },
 
 	{ trigger: /([^\\])(exp|log|ln)/, replacement: "[[0]]\\[[1]]", options: "rmA" },
 	{ trigger: "conj", replacement: "^{*}", options: "mA" },
-	{ trigger: "Re", replacement: "\\mathrm{Re}", options: "mA" },
-	{ trigger: "Im", replacement: "\\mathrm{Im}", options: "mA" },
+	{ trigger: "Re", replacement: "\\operatorname{Re}", options: "mA" },
+	{ trigger: "Im", replacement: "\\operatorname{Im}", options: "mA" },
 	{ trigger: "bf", replacement: "\\mathbf{$0}", options: "mA" },
 	{ trigger: "rm", replacement: "\\mathrm{$0}$1", options: "mA" },
 	{ trigger: "ind", replacement: "\\mathbf{1}_{$0}$1", options: "mA" },
@@ -157,6 +157,7 @@ export default [
 
 	// Symbols
 	{ trigger: "ooo", replacement: "\\infty", options: "mA" },
+	{ trigger: "zap", replacement: "\\unicode{x21af}", options: "mA", description: "Contradiction (lightning arrow)" },
 	{ trigger: "sum", replacement: "\\sum", options: "mA" },
 	{ trigger: "prod", replacement: "\\prod", options: "mA" },
 	{ trigger: "\\sum", replacement: "\\sum_{${0:i}=${1:1}}^{${2:N}} $3", options: "m" },
@@ -166,6 +167,8 @@ export default [
 	{ trigger: "lii", replacement: "\\liminf\\limits_{ ${0:n} \\to ${1:\\infty} } $2", options: "mA" },
 	{ trigger: "min", replacement: "\\min_{$0} $1", options: "mA" },
 	{ trigger: "max", replacement: "\\max_{$0} $1", options: "mA" },
+	{ trigger: "argmin", replacement: "\\operatorname*{argmin}_{$0} $1", options: "mA" },
+	{ trigger: "argmax", replacement: "\\operatorname*{argmax}_{$0} $1", options: "mA" },
 	{ trigger: "supm", replacement: "\\sup_{$0} $1", options: "mA" },
 	{ trigger: "infm", replacement: "\\inf_{$0} $1", options: "mA" },
 	{ trigger: "ncr", replacement: "\\binom{$0}{$1} $2", options: "mA" },
@@ -178,12 +181,16 @@ export default [
 	{ trigger: "xx", replacement: "\\times", options: "mA" },
 	{ trigger: "rxx", replacement: "\\rtimes", options: "mA" },
 	{ trigger: "**", replacement: "\\cdot", options: "mA" },
+	{ trigger: "ast", replacement: "\\ast", options: "mA" },
 	{ trigger: "\\cdot*", replacement: "\\cdots", options: "mA" },
 	{ trigger: "para", replacement: "\\parallel", options: "mA" },
 
 	{ trigger: "===", replacement: "\\equiv", options: "mA" },
 	{ trigger: "!=", replacement: "\\neq", options: "mA" },
 	{ trigger: "neq", replacement: "\\neq", options: "mA" },
+	{ trigger: "aeq", replacement: "\\overset{$0}{=}", options: "mA" },
+	{ trigger: "deq", replacement: "\\overset{d}{=}", options: "mA" },
+	{ trigger: ":=", replacement: "\\coloneqq", options: "mA" },
 	{ trigger: ">=", replacement: "\\geq", options: "mA" },
 	{ trigger: "geq", replacement: "\\geq", options: "mA" },
 	{ trigger: "<=", replacement: "\\leq", options: "mA" },
@@ -287,6 +294,12 @@ export default [
 	{ trigger: "Prob", replacement: "\\mathbb{P}", options: "mA" },
 	{ trigger: "PP", replacement: "\\mathbb{P}", options: "mA" },
 
+	// Topology
+	// "int..." triggers are unreachable: /([^\\])int/ expands to \int on the third keystroke.
+	{ trigger: "Int", replacement: "\\operatorname{int}", options: "mA", description: "Interior" },
+	// \partial is in ${SYMBOL}, so a following letter gets a space (\partial A).
+	{ trigger: "bd", replacement: "\\partial", options: "mA", description: "Boundary" },
+
 	// Handle spaces and backslashes
 
 	// Snippet variables can be used as shortcuts when writing snippets.
@@ -313,6 +326,8 @@ export default [
 	{ trigger: "par", replacement: "\\frac{ \\partial ${0:y} }{ \\partial ${1:x} } $2", options: "m" },
 	{ trigger: /pa([A-Za-z])([A-Za-z])/, replacement: "\\frac{ \\partial [[0]] }{ \\partial [[1]] } ", options: "rm" },
 	{ trigger: "ddt", replacement: "\\frac{d}{dt} ", options: "mA" },
+	{ trigger: "pderiv", replacement: "\\partial_{$0} $1", options: "mA" },
+	{ trigger: "restr", replacement: "\\big|_{$0} $1", options: "mA" },
 
 	{ trigger: /([^\\])int/, replacement: "[[0]]\\int", options: "mA", priority: -1 },
 	{ trigger: "\\int", replacement: "\\int $0 \\, d${1:x} $2", options: "m" },
