@@ -57,6 +57,7 @@ export default [
 	{ trigger: "ee", replacement: "e^{ $0 }$1", options: "mA" },
 	{ trigger: "invs", replacement: "^{-1}", options: "mA" },
 	{ trigger: "supp", replacement: "\\operatorname{supp}", options: "mA" },
+	{ trigger: "sgn", replacement: "\\operatorname{sgn}", options: "mA" },
 
 	{ trigger: /([^\\])(exp|log|ln)/, replacement: "[[0]]\\[[1]]", options: "rmA" },
 	{ trigger: "conj", replacement: "^{*}", options: "mA" },
