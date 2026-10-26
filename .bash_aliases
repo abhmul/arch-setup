@@ -228,12 +228,17 @@ alias agent-python='source $HOME/.local/share/agent-python/.venv/bin/activate'
 # to ~/.local/share/agent-python/.venv. Workaround for claude-code
 # issue #15897 (updatedInput hooks clobbered in multi-hook configs).
 # Only affects the claude subprocess; this shell's PATH is untouched.
+# Set temporary-directory defaults for Claude and its child processes.
 claude() {
 	local -a agent_tracker=()
 	if [[ -x "$HOME/.local/bin/i3-session" ]]; then
 		agent_tracker=("$HOME/.local/bin/i3-session" agent-launch --launcher claude --)
 	fi
 	command env -u PYTHONHOME \
+		TMPDIR="$HOME/tmp" \
+		TMP="$HOME/tmp" \
+		TEMP="$HOME/tmp" \
+		CLAUDE_CODE_TMPDIR="$HOME/tmp/claude" \
 		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
 		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
 		"${agent_tracker[@]}" claude "$@"
@@ -242,7 +247,7 @@ claude() {
 # files decide (user modelSettings / project .claude/settings.json), so /effort
 # and per-project defaults take effect. Pass --effort <level> by hand to override.
 
-# Both accounts use the same launch options and Python environment.
+# Both accounts use the same launch options, temporary directory, and Python environment.
 # ~/.codex-academic shares configuration and memory with ~/.codex.
 _codex_account() {
 	local codex_account_home="$1"
@@ -275,6 +280,9 @@ _codex_account() {
 	esac
 	command env -u PYTHONHOME \
 		CODEX_HOME="$codex_account_home" \
+		TMPDIR="$HOME/tmp" \
+		TMP="$HOME/tmp" \
+		TEMP="$HOME/tmp" \
 		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
 		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
 		"${agent_tracker[@]}" "$codex_account_binary" "${codex_profile_args[@]}" -c 'cli_auth_credentials_store="file"' "$@"
