@@ -232,6 +232,7 @@ export default [
 	{ trigger: "Uni", replacement: "\\bigcup_{$0}^{$1}", options: "mA" },
 	{ trigger: "dun", replacement: "\\sqcup", options: "mA" },
 	{ trigger: "inn", replacement: "\\in", options: "mA" },
+	{ trigger: "nii", replacement: "\\ni", options: "mA" },
 	{ trigger: "notin", replacement: "\\not\\in", options: "mA" },
 	{ trigger: "sm", replacement: "\\setminus", options: "mA" },
 	{ trigger: "\\\\\\", replacement: "\\setminus", options: "mA" },
