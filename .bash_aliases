@@ -260,32 +260,67 @@ _codex_account() {
 		agent_tracker=("$HOME/.local/bin/i3-session" agent-launch --launcher "$agent_launcher" --)
 	fi
 	local -a codex_profile_args=(-p auto)
-	# Management commands do not accept a runtime profile.
-	case "${1-}" in
-		login|logout|doctor|app-server|agents|queue|remote-control|completion|update|migrate-rollouts|plugin|mcp-server|exec-server|features|apply|cloud|help)
+	local -a codex_remote_args=(--remote unix://)
+	local -a codex_positionals=()
+	local codex_remote=unix:// codex_use_daemon=true codex_value_flag= codex_arg
+	# Inspect options without changing argv; option values and text after --
+	# must not be mistaken for commands or connection flags.
+	for codex_arg in "$@"; do
+		if [[ -n "$codex_value_flag" ]]; then
+			[[ "$codex_value_flag" != --remote ]] || codex_remote="$codex_arg"
+			codex_value_flag=
+			continue
+		fi
+		case "$codex_arg" in
+			--) break ;;
+			-h|--help|-V|--version|--no-daemon) codex_use_daemon=false ;;
+			--remote)
+				codex_remote_args=()
+				codex_remote=
+				codex_value_flag=--remote
+				;;
+			--remote=*) codex_remote_args=(); codex_remote="${codex_arg#*=}" ;;
+			-p|--profile) codex_profile_args=(); codex_value_flag="$codex_arg" ;;
+			-p?*|--profile=*) codex_profile_args=() ;;
+			-c|--config|-m|--model|-s|--sandbox|-a|--ask-for-approval|-C|--cd|--add-dir|-i|--image|--enable|--disable|--local-provider|--remote-auth-token-env)
+				codex_value_flag="$codex_arg"
+				;;
+			-*) ;;
+			*) codex_positionals+=("$codex_arg") ;;
+		esac
+	done
+	case "${codex_positionals[0]-}" in
+		login|logout|doctor|app-server|agents|queue|archive|delete|unarchive|remote-control|completion|update|migrate-rollouts|migrate-nfs-db|plugin|mcp|mcp-server|exec-server|features|apply|a|cloud|help|sandbox)
+			# Leave management commands on their native connection behavior.
 			codex_profile_args=()
+			codex_use_daemon=false
 			;;
 		resume)
 			# Remote resume restores saved permissions and rejects profile overrides.
-			local codex_arg
-			for codex_arg in "$@"; do
-				case "$codex_arg" in
-					--remote|--remote=*) codex_profile_args=(); break ;;
-				esac
-			done
+			[[ "$codex_use_daemon" != true ]] || codex_profile_args=()
 			;;
+		exec|e|review) codex_use_daemon=false ;;
 		debug)
-			[[ "${2-}" == prompt-input ]] || codex_profile_args=()
+			[[ "${codex_positionals[1]-}" == prompt-input ]] || codex_profile_args=()
+			codex_use_daemon=false
 			;;
 	esac
-	command env -u PYTHONHOME \
-		CODEX_HOME="$codex_account_home" \
-		TMPDIR="$HOME/tmp" \
-		TMP="$HOME/tmp" \
-		TEMP="$HOME/tmp" \
-		VIRTUAL_ENV="$HOME/.local/share/agent-python/.venv" \
-		PATH="$HOME/.local/share/agent-python/.venv/bin:$PATH" \
-		"${agent_tracker[@]}" "$codex_account_binary" "${codex_profile_args[@]}" -c 'cli_auth_credentials_store="file"' "$@"
+	local -a codex_env=(env -u PYTHONHOME
+		"CODEX_HOME=$codex_account_home"
+		"TMPDIR=$HOME/tmp" "TMP=$HOME/tmp" "TEMP=$HOME/tmp"
+		"VIRTUAL_ENV=$HOME/.local/share/agent-python/.venv"
+		"PATH=$HOME/.local/share/agent-python/.venv/bin:$PATH")
+	if [[ "$codex_use_daemon" == true ]]; then
+		if [[ "$codex_remote" == unix:// ]]; then
+			# Native start checks for an existing daemon and starts only if needed.
+			# Use this account's environment, without terminal tracking or a profile.
+			command "${codex_env[@]}" "$codex_account_binary" -c 'cli_auth_credentials_store="file"' app-server daemon start >/dev/null || return
+		fi
+	else
+		codex_remote_args=()
+	fi
+	command "${codex_env[@]}" "${agent_tracker[@]}" "$codex_account_binary" \
+		"${codex_profile_args[@]}" "${codex_remote_args[@]}" -c 'cli_auth_credentials_store="file"' "$@"
 }
 
 codex() {
